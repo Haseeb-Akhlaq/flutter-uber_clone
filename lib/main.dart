@@ -3,27 +3,32 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:uber_clone/login_screen.dart';
-import 'package:uber_clone/registration_screen.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:uber_clone/screens/landing_screen.dart';
+
+import 'file:///C:/Users/haseeb/AndroidStudioProjects/uber_clone/lib/screens/login_screen.dart';
+import 'file:///C:/Users/haseeb/AndroidStudioProjects/uber_clone/lib/screens/registration_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
+  print(FlutterConfig.get('appId'));
   final FirebaseApp app = await Firebase.initializeApp(
     //name: 'com.example.uber_clone',
     options: Platform.isIOS || Platform.isMacOS
         ? FirebaseOptions(
-            appId: '1:912363973099:android:2b20a7f2edac39c4b5d1ae',
-            apiKey: 'AIzaSyBlf1eCOqsB6dc3TACj4ZVN_noBsR_PExo',
-            projectId: 'uberclone-7ed4d',
-            messagingSenderId: '912363973099',
-            databaseURL: 'https://uberclone-7ed4d-default-rtdb.firebaseio.com',
+            appId: FlutterConfig.get('appId'),
+            apiKey: FlutterConfig.get('API_KEY'),
+            projectId: FlutterConfig.get('projectId'),
+            messagingSenderId: FlutterConfig.get('messagingSenderId'),
+            databaseURL: FlutterConfig.get('databaseURL'),
           )
         : FirebaseOptions(
-            appId: '1:912363973099:android:2b20a7f2edac39c4b5d1ae',
-            apiKey: 'AIzaSyBlf1eCOqsB6dc3TACj4ZVN_noBsR_PExo',
-            messagingSenderId: '912363973099',
-            projectId: 'uberclone-7ed4d',
-            databaseURL: 'https://uberclone-7ed4d-default-rtdb.firebaseio.com',
+            appId: FlutterConfig.get('appId'),
+            apiKey: FlutterConfig.get('API_KEY'),
+            projectId: FlutterConfig.get('projectId'),
+            messagingSenderId: FlutterConfig.get('messagingSenderId'),
+            databaseURL: FlutterConfig.get('databaseURL'),
           ),
   );
   runApp(MyApp());
@@ -39,7 +44,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'bolt-regular',
       ),
-      home: LoginScreen(),
+      home: LandingScreen(),
       routes: {
         LoginScreen.route: (ctx) => LoginScreen(),
         RegistrationScreen.route: (ctx) => RegistrationScreen(),
