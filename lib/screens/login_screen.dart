@@ -2,8 +2,8 @@ import 'package:connectivity/connectivity.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:uber_clone/ProjectData/project_style_data.dart';
 import 'package:uber_clone/screens/registration_screen.dart';
+import 'package:uber_clone/styles/project_style_data.dart';
 
 class LoginScreen extends StatefulWidget {
   static const route = 'loginScreen';

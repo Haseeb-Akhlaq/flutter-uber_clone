@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
-import 'package:uber_clone/ProjectData/project_style_data.dart';
+import 'package:uber_clone/helpers/helperMethods.dart';
+
+import '../styles/project_style_data.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,19 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
     zoom: 14.4746,
   );
 
+  var geoLocator = Geolocator();
+  Position currentPosition;
+
+  void setupPositonLocator() async {
+    currentPosition = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.bestForNavigation,
+    );
+    CameraPosition cp = CameraPosition(
+      target: LatLng(
+        currentPosition.latitude,
+        currentPosition.longitude,
+      ),
+      zoom: 16,
+    );
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
+    final address = await HelperMethods.findCoordinatesAddress(currentPosition);
+    print(address);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldKey,
-        // appBar: AppBar(
-        //   actions: [
-        //     IconButton(
-        //         icon: Icon(Icons.logout),
-        //         onPressed: () async {
-        //           await FirebaseAuth.instance.signOut();
-        //         })
-        //   ],
-        // ),
         drawer: Container(
           width: 250,
           child: Drawer(
@@ -105,8 +119,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ListTile(
                   leading: Icon(OMIcons.info),
                   title: Text('About', style: Styles.kdrawerTileStyle),
-                  onTap: () {
+                  onTap: () {},
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Logout', style: Styles.kdrawerTileStyle),
+                  onTap: () async {
                     Navigator.pop(context);
+                    await FirebaseAuth.instance.signOut();
                   },
                 ),
               ],
@@ -121,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
               myLocationButtonEnabled: true,
               zoomControlsEnabled: false,
               myLocationEnabled: true,
+              zoomGesturesEnabled: true,
               initialCameraPosition: _kGooglePlex,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
@@ -128,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 setState(() {
                   mapBottomPadding = MediaQuery.of(context).size.height * 0.35;
                 });
+                setupPositonLocator();
               },
             ),
 

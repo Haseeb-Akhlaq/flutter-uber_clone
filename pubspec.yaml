@@ -36,6 +36,8 @@ dependencies:
   data_connection_checker: ^0.3.4
   google_maps_flutter: ^1.0.10
   outline_material_icons: ^0.1.1
+  geolocator: ^6.1.13
+  http: ^0.12.2
 
 
 
